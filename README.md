@@ -119,7 +119,7 @@ Required repository secret:
 
 - `NPM_TOKEN`: npm automation token with publish access to `@achiral/chiro`
 
-The workflow runs tests, checks the npm tarball, bumps the package version, pushes the release commit and tag, publishes to npm with provenance, and creates a GitHub release.
+The workflow runs tests, checks the npm tarball, publishes the current version or bumps SemVer, pushes the release tag, publishes to npm with provenance, and creates a GitHub release.
 
 Primary registry for V1 is npm. GitHub Packages and JSR are deferred until there is a clear developer need for those channels.
 

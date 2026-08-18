@@ -6,9 +6,10 @@ on:
       version:
         description: SemVer bump to publish
         required: true
-        default: patch
+        default: current
         type: choice
         options:
+          - current
           - patch
           - minor
           - major
@@ -66,7 +67,9 @@ jobs:
       - name: Bump version
         id: version
         run: |
-          if [ "${{ inputs.version }}" = "prerelease" ]; then
+          if [ "${{ inputs.version }}" = "current" ]; then
+            git tag "v$(node -p "require('./package.json').version")"
+          elif [ "${{ inputs.version }}" = "prerelease" ]; then
             npm version prerelease --preid "${{ inputs.prerelease_id }}" -m "Release v%s"
           else
             npm version "${{ inputs.version }}" -m "Release v%s"
