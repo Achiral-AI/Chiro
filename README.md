@@ -111,6 +111,18 @@ export ACHIRAL_BASE_URL=https://your-org.achiral.ai/v1
 
 This package is the canonical V1 SDK for the Achiral Memory API. Framework packages should be thin adapters around this SDK and are intentionally deferred until the core API is stable.
 
+## Release
+
+This package uses SemVer. Publish from GitHub Actions with the manual **Release** workflow.
+
+Required repository secret:
+
+- `NPM_TOKEN`: npm automation token with publish access to `@achiral/chiro`
+
+The workflow runs tests, checks the npm tarball, bumps the package version, pushes the release commit and tag, publishes to npm with provenance, and creates a GitHub release.
+
+Primary registry for V1 is npm. GitHub Packages and JSR are deferred until there is a clear developer need for those channels.
+
 ## Resources
 
 - Product page: https://achiral.ai/memory-api

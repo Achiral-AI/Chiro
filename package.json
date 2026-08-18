@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "TypeScript SDK for the Achiral Memory API",
   "type": "module",
+  "packageManager": "pnpm@11.9.0",
   "license": "Apache-2.0",
   "homepage": "https://achiral.ai/memory-api",
   "repository": {
@@ -44,7 +45,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "pnpm build && tsc -p tsconfig.test.json && node dist-test/index.test.js",
     "prepack": "pnpm build",
-    "pack:dry": "npm pack --dry-run"
+    "pack:dry": "npm pack --dry-run",
+    "publish:npm": "npm publish --access public --provenance"
   },
   "engines": {
     "node": ">=20"
