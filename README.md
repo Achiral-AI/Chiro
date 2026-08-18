@@ -113,13 +113,13 @@ This package is the canonical V1 SDK for the Achiral Memory API. Framework packa
 
 ## Release
 
-This package uses SemVer. Publish from GitHub Actions with the manual **Release** workflow.
+This package uses SemVer. Publishing runs from GitHub Actions after a merge to `main`.
 
 Required repository secret:
 
 - `NPM_TOKEN`: npm automation token with publish access to `@achiral/chiro`
 
-The workflow runs tests, checks the npm tarball, publishes the current version or bumps SemVer, pushes the release tag, publishes to npm with provenance, and creates a GitHub release.
+Update the version in `package.json` as part of the release PR. After merge, the workflow runs tests, checks the npm tarball, tags the package version, publishes to npm with provenance, and creates a GitHub release.
 
 Primary registry for V1 is npm. GitHub Packages and JSR are deferred until there is a clear developer need for those channels.
 
