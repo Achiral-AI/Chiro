@@ -2,7 +2,7 @@
 
 TypeScript SDK for the [Achiral Memory API](https://achiral.ai/memory-api).
 
-`@achiral/chiro` is the official TypeScript SDK for adding Achiral Memory API retrieval, encoding, events, reinforcement, suppression, explanation, and deletion to AI-native applications.
+`@achiral/chiro` is the official TypeScript SDK for adding Achiral Memory API retrieval, encoding, events, reinforcement, suppression, explanation, and tombstoning to AI-native applications.
 
 ## Install
 
@@ -79,7 +79,7 @@ await openai.chat.completions.create({
 - `memory.reinforce(id, input)`
 - `memory.suppress(id, input)`
 - `memory.explain(id)`
-- `memory.delete(id)`
+- `memory.delete(id)` tombstones memory so it no longer appears in normal recall
 - `memory.chat(input)`
 - `memory.streamChat(input)`
 
