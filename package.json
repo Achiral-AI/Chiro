@@ -1,0 +1,58 @@
+{
+  "name": "@achiral/chiro",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for the Achiral Memory API",
+  "type": "module",
+  "license": "Apache-2.0",
+  "homepage": "https://achiral.ai/memory-api",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Achiral-AI/chiro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Achiral-AI/chiro/issues"
+  },
+  "keywords": [
+    "achiral",
+    "memory",
+    "ai-memory",
+    "agent-memory",
+    "act-r",
+    "sdk",
+    "typescript"
+  ],
+  "sideEffects": false,
+  "files": [
+    "dist/index.js",
+    "dist/index.js.map",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "pnpm build && tsc -p tsconfig.test.json && node dist-test/index.test.js",
+    "prepack": "pnpm build",
+    "pack:dry": "npm pack --dry-run"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
