@@ -51,26 +51,37 @@ jobs:
         run: |
           echo "tag=v$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 
+      - name: Check release tag
+        id: release_tag
+        run: |
+          git fetch --tags origin
+          if git rev-parse -q --verify "refs/tags/${{ steps.package.outputs.tag }}" >/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Release tag ${{ steps.package.outputs.tag }} already exists; skipping publish."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Check npm token
-        if: ${{ github.event_name == 'push' || !inputs.dry_run }}
+        if: ${{ (github.event_name == 'push' || !inputs.dry_run) && steps.release_tag.outputs.exists != 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: test -n "$NODE_AUTH_TOKEN"
 
       - name: Create and push git tag
-        if: ${{ github.event_name == 'push' || !inputs.dry_run }}
+        if: ${{ (github.event_name == 'push' || !inputs.dry_run) && steps.release_tag.outputs.exists != 'true' }}
         run: |
           git tag "${{ steps.package.outputs.tag }}"
           git push origin "${{ steps.package.outputs.tag }}"
 
       - name: Publish to npm
-        if: ${{ github.event_name == 'push' || !inputs.dry_run }}
+        if: ${{ (github.event_name == 'push' || !inputs.dry_run) && steps.release_tag.outputs.exists != 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public --provenance
 
       - name: Create GitHub release
-        if: ${{ github.event_name == 'push' || !inputs.dry_run }}
+        if: ${{ (github.event_name == 'push' || !inputs.dry_run) && steps.release_tag.outputs.exists != 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "${{ steps.package.outputs.tag }}" --title "${{ steps.package.outputs.tag }}" --notes "Published @achiral/chiro ${{ steps.package.outputs.tag }} to npm."
