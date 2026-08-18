@@ -27,7 +27,7 @@ export type MemoryScope = {
 
 export type ScopedRequestOptions = RequestOptions & MemoryScope;
 
-export type RecallInput = MemoryScope & {
+export type RetrieveInput = MemoryScope & {
   query: string;
   limit?: number;
   includeContext?: boolean;
@@ -36,7 +36,9 @@ export type RecallInput = MemoryScope & {
   filters?: Record<string, unknown>;
 };
 
-export type RememberInput = MemoryScope & {
+export type RecallInput = RetrieveInput;
+
+export type EncodeInput = MemoryScope & {
   content?: string;
   text?: string;
   subject?: string;
@@ -50,6 +52,8 @@ export type RememberInput = MemoryScope & {
   supersedes?: string[];
   contradicts?: string[];
 };
+
+export type RememberInput = EncodeInput;
 
 export type MemoryEventInput = MemoryScope & {
   type: string;
@@ -114,7 +118,7 @@ export type MemoryRecord = {
   [key: string]: unknown;
 };
 
-export type RecallResponse = {
+export type RetrieveResponse = {
   object?: "memory.search_result";
   memories?: MemoryRecord[];
   data?: MemoryRecord[];
@@ -122,13 +126,17 @@ export type RecallResponse = {
   [key: string]: unknown;
 };
 
-export type RememberResponse = {
+export type RecallResponse = RetrieveResponse;
+
+export type EncodeResponse = {
   id?: string;
   object?: string;
   memory?: MemoryRecord;
   candidate?: unknown;
   [key: string]: unknown;
 };
+
+export type RememberResponse = EncodeResponse;
 
 export class ChiroError extends Error {
   readonly status: number;
@@ -177,15 +185,23 @@ export class Chiro {
     }
   }
 
-  recall(input: RecallInput, options?: RequestOptions) {
-    return this.request<RecallResponse>("POST", this.memoryPath("/memory/search", input), input, options);
+  retrieve(input: RetrieveInput, options?: RequestOptions) {
+    return this.request<RetrieveResponse>("POST", this.memoryPath("/memory/retrieve", input), input, options);
   }
 
-  remember(input: RememberInput, options?: RequestOptions) {
-    return this.request<RememberResponse>("POST", this.memoryPath("/memory", input), input, {
+  recall(input: RecallInput, options?: RequestOptions) {
+    return this.retrieve(input, options);
+  }
+
+  encode(input: EncodeInput, options?: RequestOptions) {
+    return this.request<EncodeResponse>("POST", this.memoryPath("/memory", input), input, {
       ...options,
       idempotencyKey: options?.idempotencyKey ?? idempotencyKey("memory", input),
     });
+  }
+
+  remember(input: RememberInput, options?: RequestOptions) {
+    return this.encode(input, options);
   }
 
   reinforce(id: string, input: ReinforceInput = {}, options?: ScopedRequestOptions) {
@@ -245,7 +261,7 @@ export class Chiro {
   private memoryPath(path: string, input: MemoryScope) {
     const agent = input.agent ?? this.agent;
     if (!agent) return path;
-    if (path === "/memory/search") return `/memory/agents/${encodeURIComponent(agent)}/search`;
+    if (path === "/memory/retrieve") return `/memory/agents/${encodeURIComponent(agent)}/retrieve`;
     if (path === "/memory") return `/memory/agents/${encodeURIComponent(agent)}`;
     return path;
   }

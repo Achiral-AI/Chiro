@@ -24,19 +24,23 @@ async function run() {
     fetch: captureFetch(requests),
   });
 
-  await chiro.recall({ query: "auth" });
-  await chiro.remember({ content: "JWT keys rotate weekly." });
+  await chiro.retrieve({ query: "auth" });
+  await chiro.recall({ query: "auth alias" });
+  await chiro.encode({ content: "JWT keys rotate weekly." });
+  await chiro.remember({ content: "JWT keys rotate weekly alias." });
   await chiro.reinforce("mem_123", { reason: "used" });
   await chiro.suppress("mem_123", { reason: "stale" });
   await chiro.explain("mem_123");
   await chiro.delete("mem_123");
 
-  assertPath(requests[0], "/memory/agents/api-sentinel/search");
-  assertPath(requests[1], "/memory/agents/api-sentinel");
-  assertPath(requests[2], "/memory/agents/api-sentinel/mem_123/reinforce");
-  assertPath(requests[3], "/memory/agents/api-sentinel/mem_123/suppress");
-  assertPath(requests[4], "/memory/agents/api-sentinel/mem_123/provenance");
-  assertPath(requests[5], "/memory/agents/api-sentinel/mem_123");
+  assertPath(requests[0], "/memory/agents/api-sentinel/retrieve");
+  assertPath(requests[1], "/memory/agents/api-sentinel/retrieve");
+  assertPath(requests[2], "/memory/agents/api-sentinel");
+  assertPath(requests[3], "/memory/agents/api-sentinel");
+  assertPath(requests[4], "/memory/agents/api-sentinel/mem_123/reinforce");
+  assertPath(requests[5], "/memory/agents/api-sentinel/mem_123/suppress");
+  assertPath(requests[6], "/memory/agents/api-sentinel/mem_123/provenance");
+  assertPath(requests[7], "/memory/agents/api-sentinel/mem_123");
 
   const orgRequests: CapturedRequest[] = [];
   const orgChiro = new Chiro({

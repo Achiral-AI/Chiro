@@ -2,7 +2,7 @@
 
 TypeScript SDK for the [Achiral Memory API](https://achiral.ai/memory-api).
 
-`@achiral/chiro` is the official TypeScript SDK for adding Achiral Memory API recall, write-back, events, reinforcement, suppression, provenance, and deletion to AI-native applications.
+`@achiral/chiro` is the official TypeScript SDK for adding Achiral Memory API retrieval, encoding, events, reinforcement, suppression, explanation, and deletion to AI-native applications.
 
 ## Install
 
@@ -24,12 +24,12 @@ const memory = new Chiro({
   baseURL: "https://your-org.achiral.ai/v1",
 });
 
-const recall = await memory.recall({
+const retrieval = await memory.retrieve({
   query: "What should this app remember?",
   includeContext: true,
 });
 
-await memory.remember({
+await memory.encode({
   content: "User prefers release notes as bullet points.",
   source: "product-event",
 });
@@ -44,18 +44,18 @@ const agentMemory = new Chiro({
   agent: "api-sentinel",
 });
 
-await agentMemory.remember({
+await agentMemory.encode({
   content: "The auth service rotates JWT signing keys every 7 days.",
   memoryKind: "architecture",
 });
 ```
 
-When `agent` is configured, `recall`, `remember`, `reinforce`, `suppress`, `explain`, and `delete` use agent-scoped Memory API paths by default. Without `agent`, they use organization-level memory.
+When `agent` is configured, `retrieve`, `encode`, `reinforce`, `suppress`, `explain`, and `delete` use agent-scoped Memory API paths by default. Without `agent`, they use organization-level memory. `recall()` and `remember()` remain natural aliases for `retrieve()` and `encode()`.
 
 ## Bring your own model
 
 ```ts
-const recall = await memory.recall({
+const retrieval = await memory.retrieve({
   query: "Draft a migration plan for auth.",
   namespace: "identity",
   intent: "plan auth migration",
@@ -65,7 +65,7 @@ const recall = await memory.recall({
 await openai.chat.completions.create({
   model: "gpt-5",
   messages: [
-    { role: "system", content: recall.context?.systemBlock ?? "" },
+    { role: "system", content: retrieval.context?.systemBlock ?? "" },
     { role: "user", content: "What should we do next?" },
   ],
 });
@@ -73,8 +73,8 @@ await openai.chat.completions.create({
 
 ## API
 
-- `memory.recall(input)`
-- `memory.remember(input, options)`
+- `memory.retrieve(input)`; natural alias: `memory.recall(input)`
+- `memory.encode(input, options)`; natural alias: `memory.remember(input, options)`
 - `memory.events.ingest(input, options)`
 - `memory.reinforce(id, input)`
 - `memory.suppress(id, input)`
@@ -83,7 +83,7 @@ await openai.chat.completions.create({
 - `memory.chat(input)`
 - `memory.streamChat(input)`
 
-Use `namespace` to keep memory for different apps, services, teams, or environments separate. Use `intent` to say why the current recall or write is happening.
+Use `namespace` to keep memory for different apps, services, teams, or environments separate. Use `intent` to say why the current retrieval or encoding is happening.
 
 ## Streaming chat
 

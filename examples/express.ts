@@ -10,12 +10,12 @@ const memory = new Chiro({
 });
 
 app.post("/memory", async (request, response) => {
-  const recall = await memory.recall({
+  const retrieval = await memory.retrieve({
     query: request.body.query,
     includeContext: true,
   });
 
-  response.json(recall);
+  response.json(retrieval);
 });
 
 app.listen(3000);

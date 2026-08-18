@@ -7,6 +7,6 @@ const memory = new Chiro({
 
 export async function POST(request: Request) {
   const { query } = await request.json();
-  const recall = await memory.recall({ query, includeContext: true });
-  return Response.json(recall);
+  const retrieval = await memory.retrieve({ query, includeContext: true });
+  return Response.json(retrieval);
 }

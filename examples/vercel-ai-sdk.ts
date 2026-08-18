@@ -6,10 +6,10 @@ const memory = new Chiro({
 });
 
 export async function buildMemoryContext(userRequest: string) {
-  const recall = await memory.recall({
+  const retrieval = await memory.retrieve({
     query: userRequest,
     includeContext: true,
   });
 
-  return recall.context?.systemBlock ?? "";
+  return retrieval.context?.systemBlock ?? "";
 }
